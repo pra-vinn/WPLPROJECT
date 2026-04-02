@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Authentication</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter;}
+
+body{
+    background:#f5f5f5;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+
+/* CARD */
+.box{
+    background:white;
+    padding:40px;
+    width:340px;
+    border-radius:12px;
+    border:1px solid #eee;
+}
+
+/* TITLE */
+h2{
+    text-align:center;
+    margin-bottom:20px;
+}
+
+/* INPUTS */
+input, select{
+    width:100%;
+    padding:12px;
+    margin:8px 0 2px 0;
+    border-radius:6px;
+    border:1px solid #ddd;
+}
+
+/* ERROR MESSAGE */
+.error{
+    color:red;
+    font-size:12px;
+    margin-bottom:6px;
+    display:none;
+}
+
+/* BUTTON */
+button{
+    width:100%;
+    padding:12px;
+    margin-top:10px;
+    background:#111;
+    color:white;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#333;
+}
+
+/* SWITCH TEXT */
+.switch{
+    text-align:center;
+    margin-top:15px;
+    font-size:13px;
+    color:#555;
+    cursor:pointer;
+    text-decoration:underline;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="box">
+
+<h2 id="title">Login</h2>
+
+<input id="name" placeholder="Full Name" style="display:none;">
+<div class="error" id="nameErr">Name is required.</div>
+
+<input id="email" placeholder="Email">
+<div class="error" id="emailErr">Enter a valid email address.</div>
+
+<input id="pass" type="password" placeholder="Password">
+<div class="error" id="passErr">Password must be at least 6 characters.</div>
+
+<input id="confirmPass" type="password" placeholder="Confirm Password" style="display:none;">
+<div class="error" id="confirmErr">Passwords do not match.</div>
+
+<select id="role">
+    <option>User</option>
+    <option>Admin</option>
+</select>
+
+<button onclick="handle()" id="btn">Login</button>
+
+<div class="switch" onclick="toggle()" id="switchText">
+    Create account
+</div>
+
+</div>
+
+<script>
+
+let isLogin = true;
+
+function toggle(){
+    isLogin = !isLogin;
+
+    document.getElementById("title").innerText = isLogin ? "Login" : "Register";
+    document.getElementById("name").style.display = isLogin ? "none" : "block";
+    document.getElementById("confirmPass").style.display = isLogin ? "none" : "block";
+    document.getElementById("btn").innerText = isLogin ? "Login" : "Register";
+    document.getElementById("switchText").innerText = isLogin
+        ? "Create account"
+        : "Already have an account?";
+
+    clearErrors();
+}
+
+function showError(id, msg){
+    let el = document.getElementById(id);
+    el.innerText = msg;
+    el.style.display = "block";
+}
+
+function hideError(id){
+    document.getElementById(id).style.display = "none";
+}
+
+function clearErrors(){
+    ["nameErr","emailErr","passErr","confirmErr"].forEach(id => hideError(id));
+}
+
+function isValidEmail(email){
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+function handle(){
+
+    clearErrors();
+
+    let name    = document.getElementById("name").value.trim();
+    let email   = document.getElementById("email").value.trim();
+    let pass    = document.getElementById("pass").value;
+    let confirm = document.getElementById("confirmPass").value;
+    let role    = document.getElementById("role").value;
+
+    let valid = true;
+
+    if(!isLogin){
+
+        if(name === ""){
+            showError("nameErr", "Name is required.");
+            valid = false;
+        }
+
+        if(!isValidEmail(email)){
+            showError("emailErr", "Enter a valid email address.");
+            valid = false;
+        }
+
+        if(pass.length < 6){
+            showError("passErr", "Password must be at least 6 characters.");
+            valid = false;
+        }
+
+        if(confirm !== pass){
+            showError("confirmErr", "Passwords do not match.");
+            valid = false;
+        }
+
+        if(!valid) return;
+
+        alert("Registered successfully! Please login.");
+        toggle();
+        return;
+    }
+
+    if(!isValidEmail(email)){
+        showError("emailErr", "Enter a valid email address.");
+        valid = false;
+    }
+
+    if(pass.length < 6){
+        showError("passErr", "Password must be at least 6 characters.");
+        valid = false;
+    }
+
+    if(!valid) return;
+
+    localStorage.setItem("user", email);
+
+    if(role === "Admin"){
+        window.location = "admin.html";
+    }else{
+        window.location = "explore.html";
+    }
+}
+
+</script>
+
+</body>
+</html>

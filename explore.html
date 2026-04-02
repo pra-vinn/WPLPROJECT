@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Explore</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter;}
+body{background:#f6f6f6;}
+
+/* NAVBAR */
+.navbar{
+    padding:18px 60px;
+    background:white;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    border-bottom:1px solid #eee;
+}
+
+.logo{
+    font-weight:600;
+    font-size:18px;
+}
+
+.nav a{
+    margin-left:25px;
+    text-decoration:none;
+    color:#555;
+    font-size:14px;
+}
+
+.nav a.active{
+    color:black;
+    font-weight:600;
+    border-bottom:2px solid black;
+    padding-bottom:2px;
+}
+
+/* HERO */
+.hero{
+    padding:40px 60px 10px;
+}
+
+/* SEARCH */
+.search{
+    padding:10px 60px;
+}
+
+.search input{
+    width:320px;
+    padding:10px;
+    border-radius:6px;
+    border:1px solid #ccc;
+}
+
+/* CATEGORY TABS */
+.tabs{
+    padding:10px 60px;
+}
+
+.tabs button{
+    padding:8px 15px;
+    margin-right:10px;
+    border:none;
+    background:#eaeaea;
+    border-radius:20px;
+    cursor:pointer;
+}
+
+.tabs button.activeTab{
+    background:#111;
+    color:white;
+}
+
+/* GRID */
+.grid{
+    padding:20px 60px;
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:20px;
+}
+
+/* CARD */
+.card{
+    position:relative;
+    background:white;
+    border-radius:12px;
+    overflow:hidden;
+    border:1px solid #eee;
+}
+
+.card img{
+    width:100%;
+    height:160px;
+    object-fit:cover;
+    background:#ddd;
+}
+
+/* OVERLAY */
+.overlay{
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:160px;
+    background:rgba(0,0,0,0.5);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    opacity:0;
+    transition:0.3s;
+}
+
+.card:hover .overlay{
+    opacity:1;
+}
+
+.overlay button{
+    padding:8px 15px;
+    background:white;
+    border:none;
+    cursor:pointer;
+    border-radius:6px;
+}
+
+/* TEXT */
+.card h3{
+    padding:10px;
+}
+
+.card p{
+    padding:0 10px 10px;
+    font-size:13px;
+    color:#666;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+    <div class="logo">SkillShare</div>
+
+    <div class="nav">
+        <a href="explore.html" class="active">Explore</a>
+        <a href="upload.html">Upload</a>
+        <a href="profile.html">Profile</a>
+        <a href="index.html">Logout</a>
+    </div>
+</div>
+
+<div class="hero">
+    <h2>Explore Tutorials</h2>
+</div>
+
+<!-- SEARCH -->
+<div class="search">
+    <input id="search" placeholder="Search tutorials">
+</div>
+
+<!-- CATEGORY TABS -->
+<div class="tabs">
+    <button class="activeTab" onclick="filter(event,'All')">All</button>
+    <button onclick="filter(event,'Coding')">Coding</button>
+    <button onclick="filter(event,'Fitness')">Fitness</button>
+    <button onclick="filter(event,'Cooking')">Cooking</button>
+</div>
+
+<div class="grid" id="list"></div>
+
+<script>
+
+let allData = [
+{title:"Java Basics",cat:"Coding",img:"https://images.unsplash.com/photo-1515879218367-8466d910aaa4"},
+{title:"HTML Guide",cat:"Coding",img:"https://images.unsplash.com/photo-1498050108023-c5249f4df085"},
+{title:"Python Intro",cat:"Coding",img:"https://images.unsplash.com/photo-1518770660439-4636190af475"},
+{title:"JS Basics",cat:"Coding",img:"https://images.unsplash.com/photo-1526379095098-d400fd0bf935"},
+
+{title:"Gym Workout",cat:"Fitness",img:"https://images.unsplash.com/photo-1517836357463-d25dfeac3438"},
+{title:"Yoga Basics",cat:"Fitness",img:"https://images.unsplash.com/photo-1552058544-f2b08422138a"},
+{title:"Stretch Training",cat:"Fitness",img:"https://images.unsplash.com/photo-1599058917212-d750089bc07e"},
+
+{title:"Pasta Recipe",cat:"Cooking",img:"https://images.unsplash.com/photo-1498837167922-ddd27525d352"},
+{title:"Healthy Salad",cat:"Cooking",img:"https://images.unsplash.com/photo-1546069901-eacef0df6022"},
+{title:"Burger Making",cat:"Cooking",img:"https://images.unsplash.com/photo-1550547660-d9450f859349"}
+];
+
+let currentCat = "All";
+
+function render(){
+
+    let val = document.getElementById("search").value.toLowerCase();
+
+    let filtered = allData.filter(d =>
+        (currentCat==="All" || d.cat===currentCat) &&
+        d.title.toLowerCase().includes(val)
+    );
+
+    let html="";
+
+    filtered.forEach(d=>{
+
+        html+=`
+<div class="card">
+
+<img src="${d.img}" onerror="this.src='https://via.placeholder.com/400'">
+
+<div class="overlay">
+<button onclick="openPage('${d.title}')">View</button>
+</div>
+
+<h3>${d.title}</h3>
+<p>${d.cat}</p>
+
+</div>`;
+    });
+
+    document.getElementById("list").innerHTML=html;
+}
+
+function filter(e,cat){
+    currentCat=cat;
+
+    document.querySelectorAll(".tabs button").forEach(b=>b.classList.remove("activeTab"));
+    e.target.classList.add("activeTab");
+
+    render();
+}
+
+function openPage(title){
+    localStorage.setItem("tutorial",title);
+    window.location="tutorial.html";
+}
+
+document.getElementById("search").oninput = render;
+
+render();
+
+</script>
+
+</body>
+</html>
