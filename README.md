@@ -37,17 +37,4 @@ admin.html: Admin dashboard for user and content management.
 
 assets/: Project images and videos.
 
-Setup and Usage
-Clone the repository:
-git clone https://github.com/your-username/skillshare.git
 
-Open index.html in any modern web browser.
-
-To Login as Admin: Select "Admin" from the dropdown on the auth.html page.
-
-To Upload: Go to the "Upload" tab, select a file (Image/Video) from your PC, and fill in the details.
-
-Important Notes
-Storage Limit: This project uses localStorage, which is limited to approximately 5MB depending on your browser. Please upload small, compressed files for the best experience.
-
-Browser Compatibility: Best viewed in Chrome, Edge, or Firefox.
